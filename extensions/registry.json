@@ -1,0 +1,72 @@
+[
+  {
+    "id": "aurora-glow-theme",
+    "name": "Aurora Glow Theme",
+    "publisher": "ISHA",
+    "category": "Themes",
+    "description": "The default ISHA look — violet-to-amber aurora accents and ambient particles.",
+    "icon": "sparkles",
+    "kind": "theme",
+    "cssClass": "theme-aurora"
+  },
+  {
+    "id": "midnight-mono-theme",
+    "name": "Midnight Mono",
+    "publisher": "ISHA",
+    "category": "Themes",
+    "description": "A quieter, near-monochrome dark theme for long focus sessions.",
+    "icon": "moon",
+    "kind": "theme",
+    "cssClass": "theme-midnight"
+  },
+  {
+    "id": "sunrise-light-theme",
+    "name": "Sunrise Light",
+    "publisher": "ISHA",
+    "category": "Themes",
+    "description": "A warm light theme for daytime coding.",
+    "icon": "sun",
+    "kind": "theme",
+    "cssClass": "theme-sunrise"
+  },
+  {
+    "id": "bracket-pulse",
+    "name": "Bracket Pulse",
+    "publisher": "ISHA",
+    "category": "Editor",
+    "description": "Animates a soft pulse around matching brackets as you move the cursor.",
+    "icon": "brackets",
+    "kind": "editor-feature",
+    "feature": "bracketPulse"
+  },
+  {
+    "id": "zen-particles",
+    "name": "Zen Particles",
+    "publisher": "ISHA",
+    "category": "Ambience",
+    "description": "Adds slow-drifting ambient particles behind the editor while you type.",
+    "icon": "wind",
+    "kind": "editor-feature",
+    "feature": "zenParticles"
+  },
+  {
+    "id": "commit-lens",
+    "name": "Commit Lens (Git status in sidebar)",
+    "publisher": "ISHA",
+    "category": "Productivity",
+    "description": "Shows modified/untracked markers next to files in the explorer.",
+    "icon": "git-branch",
+    "kind": "editor-feature",
+    "feature": "gitLens"
+  },
+  {
+    "id": "snippet-pack-web",
+    "name": "Web Dev Snippet Pack",
+    "publisher": "ISHA",
+    "category": "Snippets",
+    "description": "Handy HTML/CSS/JS snippets available via the command palette.",
+    "icon": "code",
+    "kind": "snippets",
+    "feature": "webSnippets"
+  }
+]
