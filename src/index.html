@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: file: http://127.0.0.1:* http://localhost:*;" />
+<title>ISHA Code Core</title>
+<link rel="stylesheet" href="css/theme.css" />
+<link rel="stylesheet" href="css/layout.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="../node_modules/xterm/css/xterm.css" />
+</head>
+<body class="theme-aurora">
+
+  <canvas id="particles-bg"></canvas>
+
+  <div id="app">
+
+    <!-- ===================== Titlebar ===================== -->
+    <div id="titlebar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        ISHA Code Core
+      </div>
+      <div class="title-project" id="title-project">No folder opened</div>
+      <div class="win-controls">
+        <button class="win-btn" id="win-min" data-tip="Minimize"></button>
+        <button class="win-btn" id="win-max" data-tip="Maximize"></button>
+        <button class="win-btn close" id="win-close" data-tip="Close"></button>
+      </div>
+    </div>
+
+    <!-- ===================== Body ===================== -->
+    <div id="body">
+
+      <!-- Activity bar -->
+      <div id="activitybar">
+        <div class="ab-group">
+          <button class="ab-btn active" data-view="explorer" data-tip="Explorer"></button>
+          <button class="ab-btn" data-view="aichat" data-tip="AI Chat Agent"></button>
+          <button class="ab-btn" data-view="extensions" data-tip="Extension Marketplace"></button>
+        </div>
+        <div class="ab-spacer"></div>
+        <div class="ab-group">
+          <button class="ab-btn" id="toggle-terminal" data-tip="Toggle Terminal"></button>
+          <button class="ab-btn" id="toggle-theme" data-tip="Switch Theme"></button>
+        </div>
+      </div>
+
+      <!-- Sidebar (Explorer view lives here; Extensions view swaps in) -->
+      <div id="sidebar">
+        <div id="view-explorer" class="panel-content" style="display:flex; flex-direction:column; height:100%;">
+          <div class="panel-header">
+            <span id="explorer-title">Explorer</span>
+            <button class="hint-btn" id="btn-refresh-tree" data-tip="Refresh"></button>
+          </div>
+          <div class="sidebar-actions">
+            <button class="icon-btn" id="btn-open-folder" data-tip="Open Folder"></button>
+            <button class="icon-btn" id="btn-new-file" data-tip="New File"></button>
+            <button class="icon-btn" id="btn-new-folder" data-tip="New Folder"></button>
+          </div>
+          <div id="file-tree">
+            <div class="tree-empty">No folder opened yet.<br/>Use the folder icon above, or the button on the Welcome tab, to open a project.</div>
+          </div>
+        </div>
+
+        <div id="view-extensions" class="panel-content" style="display:none; flex-direction:column; height:100%;">
+          <div class="panel-header"><span>Extension Marketplace</span></div>
+          <div id="ext-search" class="search-box">
+            <span id="ext-search-icon"></span>
+            <input class="input" id="ext-search-input" placeholder="Search extensions..." />
+          </div>
+          <div id="ext-list"></div>
+        </div>
+      </div>
+
+      <div class="resizer" id="resizer-sidebar"></div>
+
+      <!-- Main column -->
+      <div id="main">
+        <div id="tabbar"></div>
+
+        <div id="editor-area">
+          <div id="welcome">
+            <div class="welcome-mark">ISHA</div>
+            <div class="welcome-sub">A free, local-first code editor. Open a folder to start editing, spin up a terminal, or ask the AI agent — all running on your machine, nothing in the cloud.</div>
+            <div class="welcome-actions">
+              <button class="btn btn-primary" id="welcome-open-folder">Open Folder</button>
+              <button class="btn" id="welcome-new-file">New File</button>
+            </div>
+          </div>
+          <div id="monaco-host" style="display:none;"></div>
+        </div>
+
+        <div class="resizer horizontal" id="resizer-terminal"></div>
+
+        <div id="terminal-panel" class="collapsed">
+          <div class="term-tabbar">
+            <span class="title">Terminal</span>
+            <button class="icon-btn" id="btn-term-new" data-tip="New Terminal"></button>
+            <button class="icon-btn" id="btn-term-close" data-tip="Close Panel"></button>
+          </div>
+          <div id="terminal-host"></div>
+        </div>
+      </div>
+
+      <div class="resizer" id="resizer-chat"></div>
+
+      <!-- AI chat panel -->
+      <div id="aichat-panel" class="collapsed">
+        <div id="aichat-header">
+          <span class="title">AI Chat Agent</span>
+          <span class="local-badge">LOCAL</span>
+        </div>
+        <div style="padding:8px 14px; border-bottom:1px solid var(--border-soft); display:flex; gap:6px; align-items:center;">
+          <select class="model-select" id="model-select"><option value="">Loading models…</option></select>
+          <button class="icon-btn" id="btn-refresh-models" data-tip="Refresh model list"></button>
+        </div>
+        <div id="chat-messages">
+          <div class="chat-empty" id="chat-empty">
+            <span id="chat-empty-icon"></span>
+            <div class="big">Ask ISHA anything about your code</div>
+            <div class="small">This runs on a local model server (Ollama by default) on your own machine — completely free, private, and offline. No cloud API key involved.</div>
+          </div>
+        </div>
+        <div id="chat-input-row">
+          <div id="chat-input-wrap">
+            <textarea id="chat-input" rows="1" placeholder="Message the local AI agent..."></textarea>
+            <button id="chat-send" disabled></button>
+          </div>
+          <div class="chat-hint">Needs a local model server running. <a id="chat-help-link">How to set it up →</a></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===================== Status bar ===================== -->
+    <div id="statusbar">
+      <span class="sb-item" id="sb-branch"></span>
+      <span class="sb-item" id="sb-path">ISHA Code Core</span>
+      <div class="sb-right">
+        <span class="sb-item" id="sb-lang">Plain Text</span>
+        <span class="sb-item" id="sb-cursor">Ln 1, Col 1</span>
+        <span class="sb-item" id="sb-ai-status">Local AI: checking…</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="toasts"></div>
+  <div id="ctx-menu-root"></div>
+  <div id="modal-root"></div>
+
+  <!-- Monaco loader -->
+  <script>window.MONACO_BASE = '../node_modules/monaco-editor/min/vs';</script>
+  <script src="../node_modules/monaco-editor/min/vs/loader.js"></script>
+  <!-- xterm -->
+  <script src="../node_modules/xterm/lib/xterm.js"></script>
+  <script src="../node_modules/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+  <script src="../node_modules/xterm-addon-web-links/lib/xterm-addon-web-links.js"></script>
+
+  <script src="js/icons.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/titlebar.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/fileExplorer.js"></script>
+  <script src="js/editorManager.js"></script>
+  <script src="js/terminalPanel.js"></script>
+  <script src="js/aiChat.js"></script>
+  <script src="js/extensionsPanel.js"></script>
+  <script src="js/renderer.js"></script>
+</body>
+</html>
