@@ -88,3 +88,7 @@ isha-code-core/
 ## License
 
 MIT — do anything you like with it.
+
+
+
+## https://gooo26.github.io/ISHA_CODE_CORE/
